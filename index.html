@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identifying Fake Websites</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 30px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            color: #ffffff;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        section {
+            display: none;
+            margin-bottom: 60px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            color: #61dafb;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        ol {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .quiz-question {
+            margin-bottom: 30px;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .quiz-options label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            padding: 15px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #61dafb;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #47a3f3;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+            background-color: #61dafb;
+            color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .confetti:before,
+        .confetti:after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f39c12;
+            border-radius: 50%;
+            animation: confettiAnimation 3s ease-in-out infinite;
+        }
+
+        .confetti:before {
+            background-color: #3498db;
+        }
+
+        .confetti:after {
+            background-color: #e74c3c;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes confettiAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-100vh);
+            }
+        }
+
+        .fade-in-text {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .confetti.show {
+            opacity: 1;
+        }
+
+        .correct-answer,
+        .incorrect-answer {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .correct-answer.show,
+        .incorrect-answer.show {
+            opacity: 1;
+        }
+
+        .check-answer-button {
+            display: block;
+            margin-top: 15px;
+            padding: 15px;
+            cursor: pointer;
+            background-color: #61dafb;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .check-answer-button:hover {
+            background-color: #47a3f3;
+        }
+
+        /* Additional styles for the persistent score display */
+        .score-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #47a3f3;
+            color: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="fade-in-text">
+        <h1>Identifying Fake Websites</h1>
+        <p>Learn how to spot fake websites and protect yourself online.</p>
+    </header>
+
+    <!-- Persistent Score Display -->
+    <div class="score-container">Score: <span id="score">0</span></div>
+
+    <section id="section1" style="display: block;" class="fade-in-text">
+        <h2>1. URL Analysis</h2>
+        <ol>
+            <li>Recognizable and reputable: Choose websites from well-known and trusted entities.</li>
+            <li>Secure connection: Look for "https://" indicating encryption for secure data transmission.</li>
+            <li>Consistent spelling: Genuine websites maintain accurate spelling in their URLs.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>Which URL is more likely to be fake?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="urlQuiz" value="a"> a. [https://www.google.com/]</label>
+                <label><input type="radio" name="urlQuiz" value="b"> b. [http://www.gooogle.com/]</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkAnswer(1)" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+    <section id="section2">
+        <h2>2. Website Design</h2>
+        <ol>
+            <li>Professional appearance: Features a clean layout, high-quality images, and a consistent design.</li>
+            <li>Clear navigation: User-friendly menus and easy-to-find information.</li>
+            <li>Brand consistency: Elements like logos and colors remain uniform throughout the site.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>What is a common sign of a fake website design?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="designQuiz" value="a"> a. Professional layout</label>
+                <label><input type="radio" name="designQuiz" value="b"> b. Spelling errors and poor design</label>
+                <label><input type="radio" name="designQuiz" value="c"> c. Clear navigation</label>
+                <label><input type="radio" name="designQuiz" value="d"> d. Aesthetic graphics</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkAnswer(2)" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+
+    <section id="section3">
+        <h2>3. Contact Information</h2>
+        <ol>
+            <li>Accessible support: Legitimate sites provide clear contact information or customer support.</li>
+            <li>Verify information: Cross-check provided contact details for legitimacy.</li>
+            <li>Absence of contact details: Fake websites may lack clear channels for communication.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>What does the absence of clear contact information suggest about a website?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="contactQuiz" value="a"> a. High security</label>
+                <label><input type="radio" name="contactQuiz" value="b"> b. Legitimate business</label>
+                <label><input type="radio" name="contactQuiz" value="c"> c. Potential fake</label>
+                <label><input type="radio" name="contactQuiz" value="d"> d. Quality products</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkAnswer(3)" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+
+    <section id="section4">
+        <h2>4. Secure Payments</h2>
+        <ol>
+            <li>Secure payment gateways: Legitimate sites use trusted payment processing services.</li>
+            <li>SSL encryption: Look for "https://" and a padlock icon during the payment process.</li>
+            <li>Absence of SSL: Fake websites may lack proper encryption for financial transactions.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>Why is SSL encryption important during online payments?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="paymentQuiz" value="a"> a. Enhances website design</label>
+                <label><input type="radio" name="paymentQuiz" value="b"> b. Provides secure data transmission</label>
+                <label><input type="radio" name="paymentQuiz" value="c"> c. Increases website speed</label>
+                <label><input type="radio" name="paymentQuiz" value="d"> d. Attracts more visitors</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkAnswer(4)" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+
+    <section id="section5">
+        <h2>Social Media Presence</h2>
+        <ol>
+            <li>Active and verified accounts: Legitimate businesses maintain a presence on popular social media platforms.</li>
+            <li>Engagement with followers: Legitimate accounts interact with their audience through comments and messages.</li>
+            <li>Lack of social media presence: Fake websites may have limited or no activity on social platforms.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>What does an active and engaged social media presence suggest about a website?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="socialQuiz" value="a"> a. Limited audience</label>
+                <label><input type="radio" name="socialQuiz" value="b"> b. Legitimate business</label>
+                <label><input type="radio" name="socialQuiz" value="c"> c. Poor website design</label>
+                <label><input type="radio" name="socialQuiz" value="d"> d. Slow website speed</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkAnswer(5)" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+
+    <!-- Sections 2 to 5 remain unchanged -->
+
+    <section id="section6">
+        <h2>Challenging Questions</h2>
+        <ol>
+            <li>What is the significance of the term "Punycode" in URL security?</li>
+            <li>How can Content Delivery Networks (CDNs) impact website security?</li>
+            <li>Explain the concept of a "Man-in-the-Middle" attack and its implications on online security.</li>
+        </ol>
+
+        <div class="quiz-question">
+            <p>Which of the following is a characteristic of a secure website?</p>
+            <div class="quiz-options">
+                <label><input type="radio" name="challengingQuiz" value="a"> a. Use of Punycode in the URL</label>
+                <label><input type="radio" name="challengingQuiz" value="b"> b. Implementation of a Content Delivery Network</label>
+                <label><input type="radio" name="challengingQuiz" value="c"> c. Protection against Man-in-the-Middle attacks</label>
+                <label><input type="radio" name="challengingQuiz" value="d"> d. Frequent website redesigns</label>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="checkChallengingAnswer()" class="check-answer-button">Check Answer</button>
+        </div>
+    </section>
+
+    <div class="result-container fade-in-text" id="resultContainer">
+        <h2>Your Results</h2>
+        <p>Total Points: <span id="totalPoints">0</span></p>
+
+        <p id="congratulationText"></p>
+        <!-- Display correct and incorrect answers with fading animation -->
+        <div id="answerFeedback" class="answer-feedback">
+            <p class="correct-answer">Correct! Well done.</p>
+            <p class="incorrect-answer">Oops! That's not correct.</p>
+        </div>
+    </div>
+
+    <div class="confetti"></div>
+
+    <script>
+        // JavaScript code goes here
+        let points = 0;
+        let correctAnswersCount = 0;
+
+        function showAnswerFeedback(isCorrect, correctAnswer) {
+            const feedbackElement = document.getElementById('answerFeedback');
+            const correctAnswerElement = feedbackElement.querySelector('.correct-answer');
+            const incorrectAnswerElement = feedbackElement.querySelector('.incorrect-answer');
+
+            if (isCorrect) {
+                correctAnswerElement.classList.add('show');
+                incorrectAnswerElement.classList.remove('show');
+            } else {
+                correctAnswerElement.classList.remove('show');
+                incorrectAnswerElement.classList.add('show');
+                incorrectAnswerElement.innerText = `Wrong Answer! The correct answer is: ${correctAnswer}`;
+            }
+        }
+
+        function checkAnswer(currentSection) {
+            // Assuming correct answers for each section
+            const correctAnswers = [null, "b", "b", "c", "b", "a"]; // Index 0 is not used
+
+            // Check the selected answer
+            const selectedAnswer = document.querySelector(`input[name="urlQuiz"]:checked,
+                input[name="designQuiz"]:checked,
+                input[name="contentQuiz"]:checked,
+                input[name="phishingQuiz"]:checked,
+                input[name="securityQuiz"]:checked`).value;
+
+            // Display correct and incorrect answer feedback with fading animation
+            showAnswerFeedback(selectedAnswer === correctAnswers[currentSection], correctAnswers[currentSection]);
+
+            // Update points and score immediately
+            if (selectedAnswer === correctAnswers[currentSection]) {
+                points += 3;
+                correctAnswersCount++;
+            }
+
+            // Update score in the top right corner
+            document.getElementById('score').innerText = correctAnswersCount;
+
+            // Hide current section
+            document.getElementById(`section${currentSection}`).style.display = 'none';
+
+            // Show next section or challenging questions
+            const nextSection = currentSection + 1;
+            if (nextSection <= 5) {
+                document.getElementById(`section${nextSection}`).style.display = 'block';
+            } else {
+                // Show challenging questions section
+                document.getElementById('section6').style.display = 'block';
+            }
+        }
+
+        // Additional function for challenging questions
+        function checkChallengingAnswer() {
+            // Assuming correct challenging answer
+            const challengingCorrectAnswer = "c";
+
+            // Check the selected answer
+            const selectedAnswer = document.querySelector(`input[name="challengingQuiz"]:checked`).value;
+
+            // Display correct and incorrect answer feedback with fading animation
+            showAnswerFeedback(selectedAnswer === challengingCorrectAnswer, challengingCorrectAnswer);
+
+            // Update points and score immediately
+            if (selectedAnswer === challengingCorrectAnswer) {
+                points += 3;
+                correctAnswersCount++;
+            }
+
+            // Update score in the top right corner
+            document.getElementById('score').innerText = correctAnswersCount;
+
+            // Hide challenging questions section
+            document.getElementById('section6').style.display = 'none';
+        }
+    </script>
+
+    <!-- Add script for confetti animation -->
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <!-- Code injected by live-server -->
+    <script>
+        // Live-server script goes here
+    </script>
+</body>
+
+</html>
